@@ -66,7 +66,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  button, input { font: inherit; }
+  button, input, textarea { font: inherit; }
   a { color: inherit; }
 
   .page {
@@ -173,11 +173,12 @@
   }
   .hero > * { min-width: 0; }
   .page.has-result .hero {
-    grid-template-columns: minmax(310px, 0.5fr) minmax(620px, 1fr);
+    grid-template-columns: minmax(430px, 0.58fr) minmax(620px, 1fr);
+    gap: 50px;
     align-items: start;
   }
   .page.has-result .hero-copy {
-    max-width: 390px;
+    max-width: 460px;
   }
   .page.has-result h1 {
     max-width: 380px;
@@ -185,10 +186,18 @@
     line-height: 1.02;
   }
   .page.has-result .hero-copy > p {
-    max-width: 370px;
+    max-width: 420px;
   }
   .page.has-result .seal-form {
-    width: min(100%, 370px);
+    width: min(100%, 460px);
+  }
+  .page.has-result .token-row {
+    grid-template-columns: 46px minmax(0, 1fr);
+  }
+  .page.has-result .seal-form button {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 50px;
   }
   .hero-copy { max-width: 650px; min-width: 0; }
   .kicker {
@@ -244,8 +253,9 @@
     font-weight: 620;
   }
   .token-row {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr) 130px;
+    align-items: start;
     gap: 10px;
   }
   .token-icon {
@@ -260,24 +270,30 @@
     border: 1px solid #D9E9FF;
   }
   .token-icon .icon-img { width: 20px; height: 20px; }
-  .seal-form input {
+  .seal-form textarea {
     min-width: 0;
-    flex: 1;
-    height: 54px;
+    width: 100%;
+    min-height: 66px;
+    max-height: 160px;
     border: 0;
     outline: 0;
-    padding: 0 4px;
+    padding: 12px 4px 10px;
     color: var(--navy);
     background: transparent;
     font-family: var(--mono);
     font-size: 15px;
+    line-height: 1.45;
+    resize: none;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
-  .seal-form input::placeholder {
+  .seal-form textarea::placeholder {
     color: #8AA0B9;
     font-family: var(--sans);
   }
   .seal-form button {
-    height: 54px;
+    height: 66px;
     min-width: 130px;
     border: 0;
     border-radius: 17px;
@@ -293,14 +309,19 @@
   .seal-form button:active { transform: translateY(1px) scale(0.99); }
   .form-hint {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     margin: 11px 8px 4px;
     color: var(--gray);
     font-size: 12px;
     font-weight: 540;
+    min-width: 0;
   }
   .form-hint .icon-img { width: 15px; height: 15px; }
+  .form-hint span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 
   .trust-strip {
     display: flex;
@@ -884,16 +905,21 @@
     .brand-copy span { font-size: 11px; }
     .hero {
       display: block;
-      width: 100%;
-      max-width: 100%;
+      width: auto;
+      max-width: none;
       margin: 0;
       padding: 34px 16px 28px;
+      box-sizing: border-box;
     }
     .hero-copy,
     .visual-zone,
     .result-card {
-      width: 100%;
-      max-width: 100%;
+      width: calc(100vw - 32px);
+      max-width: calc(100vw - 32px);
+    }
+    .seal-form {
+      width: calc(100vw - 32px);
+      max-width: calc(100vw - 32px);
     }
     .visual-zone,
     .result-card.show {
@@ -901,21 +927,27 @@
       max-width: calc(100vw - 32px);
     }
     .page.has-result .hero { display: block; }
+    .page.has-result .hero-copy,
+    .page.has-result .seal-form {
+      width: calc(100vw - 32px);
+      max-width: calc(100vw - 32px);
+    }
     h1 {
-      max-width: 370px;
+      max-width: 350px;
       font-size: 46px;
       line-height: 1.04;
     }
     .page.has-result h1 {
-      max-width: 350px;
+      max-width: 340px;
       font-size: 40px;
       line-height: 1.04;
     }
     .hero-copy > p {
-      max-width: 360px;
+      max-width: 100%;
       margin: 16px 0 22px;
       font-size: 15px;
       line-height: 1.48;
+      overflow-wrap: anywhere;
     }
     .seal-form { border-radius: 22px; padding: 10px; }
     .token-row {
@@ -924,7 +956,11 @@
       gap: 8px;
     }
     .token-icon { width: 42px; height: 42px; border-radius: 14px; }
-    .seal-form input { height: 48px; font-size: 14px; }
+    .seal-form textarea {
+      grid-column: 2 / 3;
+      min-height: 74px;
+      font-size: 14px;
+    }
     .seal-form button {
       grid-column: 1 / -1;
       width: 100%;
@@ -1008,7 +1044,7 @@
           <span class="token-icon" aria-hidden="true">
             <img class="icon-img" src="assets/icons/document.png" alt="" decoding="async" />
           </span>
-          <input id="token" name="token" placeholder="Paste link or token" spellcheck="false" />
+          <textarea id="token" name="token" rows="2" placeholder="Paste link or token" spellcheck="false"></textarea>
           <button type="submit">Verify seal</button>
         </div>
         <div class="form-hint">
@@ -1117,10 +1153,10 @@
   function sanitize(html) { return (window.DOMPurify && DOMPurify.sanitize) ? DOMPurify.sanitize(html) : html; }
 
   function cleanToken(t) {
-    return String(t || "").trim().replace(/^["'<]+|[)"'>.,;]+$/g, "");
+    return String(t || "").trim().replace(/\s+/g, "").replace(/^["'<]+|[)"'>.,;]+$/g, "");
   }
   function extractToken(raw) {
-    raw = String(raw || "").trim();
+    raw = String(raw || "").trim().replace(/\s+/g, "");
     if (!raw) return "";
     var tokenParam = raw.match(/[?&](?:token|qrToken)=([^&#\s]+)/i);
     if (tokenParam) return cleanToken(decodeURIComponent(tokenParam[1]));
@@ -1138,6 +1174,10 @@
     var hexToken = raw.match(/\b[0-9a-f]{48}\b/i);
     if (hexToken) return cleanToken(hexToken[0]);
     return cleanToken(raw);
+  }
+  function resizeTokenField() {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 160) + "px";
   }
   function chip(kind, label, withIcon) {
     return '<span class="chip ' + kind + '">' + (withIcon ? iconImg("tick") : "") + esc(label) + '</span>';
@@ -1428,6 +1468,7 @@
     token = extractToken(token);
     if (!token) { input.focus(); return; }
     input.value = token;
+    resizeTokenField();
     loading();
     var url = new URL(window.location.href);
     url.searchParams.set("token", token);
@@ -1451,6 +1492,7 @@
     card.className = "result-card";
     card.innerHTML = "";
     input.value = "";
+    resizeTokenField();
     var url = new URL(window.location.href);
     url.search = "";
     window.history.replaceState({}, "", url.pathname);
@@ -1458,6 +1500,13 @@
   }
 
   form.addEventListener("submit", function (e) { e.preventDefault(); verify(input.value); });
+  input.addEventListener("input", resizeTokenField);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      verify(input.value);
+    }
+  });
   document.getElementById("home").addEventListener("click", function (e) { e.preventDefault(); goHome(); });
 
   (function () {
@@ -1482,7 +1531,7 @@
     if (demo === "revoked") { renderState("revoked", "Seal withdrawn", "This record is no longer valid.", "It may have been refunded, replaced, or superseded. Any printed copy no longer represents a live verification record."); return; }
     var t = qs.get("token");
     if (!t) { var m = window.location.pathname.match(/\/verify\/([^/?#]+)/); if (m) t = decodeURIComponent(m[1]); }
-    if (t) { input.value = extractToken(t); verify(t); }
+    if (t) { input.value = extractToken(t); resizeTokenField(); verify(t); }
   })();
 </script>
 </body>
