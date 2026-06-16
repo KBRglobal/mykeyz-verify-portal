@@ -8,19 +8,19 @@
 <meta name="robots" content="noindex, nofollow, noarchive" />
 <meta name="theme-color" content="#F8FAFC" />
 <link rel="preconnect" href="https://api.mykeyz.io" crossorigin />
-<link rel="preload" as="image" href="assets/time-seal-hero.jpg" />
-<link rel="preload" as="image" href="assets/time-seal-macro.jpg" />
+<link rel="preload" as="image" href="/assets/time-seal-hero.jpg" />
+<link rel="preload" as="image" href="/assets/time-seal-macro.jpg" />
 <style>
   @font-face {
     font-family: "Instrument Sans";
-    src: url("assets/fonts/instrument-sans-latin-wght-normal.woff2") format("woff2");
+    src: url("/assets/fonts/instrument-sans-latin-wght-normal.woff2") format("woff2");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
     font-family: "IBM Plex Mono";
-    src: url("assets/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
+    src: url("/assets/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -62,7 +62,7 @@
     line-height: 1.5;
     background:
       linear-gradient(180deg, rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.98)),
-      url("assets/time-seal-paper.jpg") center top / cover no-repeat fixed;
+      url("/assets/time-seal-paper.jpg") center top / cover no-repeat fixed;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -360,7 +360,7 @@
     min-height: 500px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.96)),
-      url("assets/time-seal-hero.jpg") center / cover no-repeat;
+      url("/assets/time-seal-hero.jpg") center / cover no-repeat;
   }
   .atlas-image {
     position: absolute;
@@ -617,20 +617,25 @@
     min-width: 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--line-2);
+    gap: 10px;
+    padding: 14px 18px 16px;
+    background: linear-gradient(180deg, #FFFFFF, #F8FBFF);
     border-bottom: 1px solid var(--line-2);
   }
   .summary-stat {
     min-width: 0;
-    padding: 18px;
-    background: var(--white);
+    padding: 13px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: 16px;
+    background: rgba(248, 250, 252, 0.78);
   }
   .summary-stat b {
-    display: block;
+    display: flex;
+    min-height: 30px;
+    align-items: center;
     max-width: 100%;
     color: var(--navy);
-    font-size: 22px;
+    font-size: 16px;
     line-height: 1.1;
     font-weight: 720;
     overflow-wrap: anywhere;
@@ -647,50 +652,48 @@
     min-width: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 12px;
     padding: 18px;
-    background:
-      linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.98)),
-      url("assets/time-seal-paper.jpg") center / cover no-repeat;
+    background: #F8FBFF;
   }
   .proof-row {
     min-width: 0;
     display: grid;
-    grid-template-columns: 38px minmax(0, 1fr);
-    gap: 11px;
-    min-height: 78px;
-    padding: 13px;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 12px;
+    min-height: 74px;
+    padding: 14px;
     border: 1px solid var(--line-2);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.82);
-    box-shadow: 0 8px 18px rgba(7, 27, 51, 0.04);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 8px 20px rgba(7, 27, 51, 0.035);
   }
   .proof-row > div { min-width: 0; }
   .proof-row.wide { grid-column: 1 / -1; }
   .field-icon {
     display: grid;
     place-items: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 13px;
     color: var(--blue);
     background: var(--blue-soft);
     border: 1px solid #D7E8FF;
   }
   .field-icon .icon-img {
-    width: 21px;
-    height: 21px;
+    width: 20px;
+    height: 20px;
   }
   .proof-row .label {
     color: var(--gray-2);
-    font-size: 11px;
+    font-size: 11.5px;
     line-height: 1.2;
     font-weight: 670;
   }
   .proof-row .value {
     margin-top: 4px;
     color: var(--navy);
-    font-size: 13px;
+    font-size: 13.5px;
     line-height: 1.35;
     font-weight: 620;
     max-width: 100%;
@@ -700,9 +703,10 @@
   }
   .proof-row .meta {
     display: block;
-    margin-top: 4px;
+    margin-top: 6px;
     color: var(--gray);
-    font-size: 11px;
+    font-size: 11.5px;
+    line-height: 1.45;
     font-weight: 560;
     max-width: 100%;
     white-space: normal;
@@ -769,7 +773,7 @@
     padding: 20px 22px 22px;
     background:
       linear-gradient(180deg, rgba(248, 250, 252, 0.94), rgba(255, 255, 255, 0.98)),
-      url("assets/time-seal-paper.jpg") center / cover no-repeat;
+      url("/assets/time-seal-paper.jpg") center / cover no-repeat;
   }
   .proof h3 {
     margin: 0 0 3px;
@@ -982,9 +986,9 @@
     }
     .head .badge { width: 52px; height: 52px; }
     .head .t { font-size: 19px; }
-    .summary-strip { grid-template-columns: minmax(0, 1fr); }
+    .summary-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .summary-stat { padding: 15px 16px; }
-    .summary-stat b { font-size: 19px; }
+    .summary-stat b { font-size: 16px; }
     .proof-grid { grid-template-columns: minmax(0, 1fr); padding: 14px; }
     .proof-row.wide { grid-column: auto; }
     .receipt-grid { grid-template-columns: 1fr; }
@@ -1024,7 +1028,7 @@
     <div class="topbar-inner">
       <a class="brand" id="home" href="./" aria-label="TimeSeal by mykeyz.io home">
         <span class="brand-mark" aria-hidden="true">
-          <img class="icon-img" src="assets/icons/brand.png" alt="" decoding="async" />
+          <img class="icon-img" src="/assets/icons/brand.png" alt="" decoding="async" />
         </span>
         <span class="brand-copy"><strong>TimeSeal</strong><span>by mykeyz.io</span></span>
       </a>
@@ -1042,44 +1046,44 @@
         <label class="field-label" for="token">Verification link or token</label>
         <div class="token-row">
           <span class="token-icon" aria-hidden="true">
-            <img class="icon-img" src="assets/icons/document.png" alt="" decoding="async" />
+            <img class="icon-img" src="/assets/icons/document.png" alt="" decoding="async" />
           </span>
           <textarea id="token" name="token" rows="2" placeholder="Paste link or token" spellcheck="false"></textarea>
           <button type="submit">Verify seal</button>
         </div>
         <div class="form-hint">
-          <img class="icon-img" src="assets/icons/spark.png" alt="" decoding="async" />
+          <img class="icon-img" src="/assets/icons/spark.png" alt="" decoding="async" />
           Zero personal data exposed. Only cryptographic proof is shown.
         </div>
       </form>
 
       <div class="trust-strip" aria-hidden="true">
-        <span class="trust-pill"><img class="icon-img" src="assets/icons/hash.png" alt="" decoding="async" />Keyprint</span>
-        <span class="trust-pill"><img class="icon-img" src="assets/icons/time.png" alt="" decoding="async" />TimeSeal</span>
-        <span class="trust-pill"><img class="icon-img" src="assets/icons/privacy.png" alt="" decoding="async" />No PII exposed</span>
+        <span class="trust-pill"><img class="icon-img" src="/assets/icons/hash.png" alt="" decoding="async" />Keyprint</span>
+        <span class="trust-pill"><img class="icon-img" src="/assets/icons/time.png" alt="" decoding="async" />TimeSeal</span>
+        <span class="trust-pill"><img class="icon-img" src="/assets/icons/privacy.png" alt="" decoding="async" />No PII exposed</span>
       </div>
     </section>
 
     <aside class="visual-zone">
       <section class="hero-card" aria-label="TimeSeal verification visual">
         <div class="atlas-image">
-          <img src="assets/time-seal-hero.jpg" alt="An official rental record document with a modern timestamp seal" />
+          <img src="/assets/time-seal-hero.jpg" alt="An official rental record document with a modern timestamp seal" />
         </div>
         <div class="atlas-panel">
           <h2>Proof inspector</h2>
           <p>Verify the proof, not the people. The report stays private.</p>
           <div class="atlas-row">
-            <img class="icon-img" src="assets/icons/document.png" alt="" decoding="async" />
+            <img class="icon-img" src="/assets/icons/document.png" alt="" decoding="async" />
             <div><b>Verification ID</b><span>Non-guessable proof token</span></div>
             <div class="atlas-status">shown</div>
           </div>
           <div class="atlas-row">
-            <img class="icon-img" src="assets/icons/time.png" alt="" decoding="async" />
+            <img class="icon-img" src="/assets/icons/time.png" alt="" decoding="async" />
             <div><b>TimeSeal</b><span>Independent timing proof</span></div>
             <div class="atlas-status">verified</div>
           </div>
           <div class="atlas-row">
-            <img class="icon-img" src="assets/icons/hash.png" alt="" decoding="async" />
+            <img class="icon-img" src="/assets/icons/hash.png" alt="" decoding="async" />
             <div><b>Keyprint</b><span>Canonical report fingerprint</span></div>
             <div class="atlas-status">sealed</div>
           </div>
@@ -1095,17 +1099,17 @@
 
   <section class="proof-band" id="explain" aria-label="How TimeSeal works">
     <article class="proof-card">
-      <div class="proof-icon"><img class="icon-img" src="assets/icons/document.png" alt="" decoding="async" /></div>
+      <div class="proof-icon"><img class="icon-img" src="/assets/icons/document.png" alt="" decoding="async" /></div>
       <h2>Verification result</h2>
       <p>This page verifies authenticity and integrity without revealing people, property, photos, notes, or contact details.</p>
     </article>
     <article class="proof-card">
-      <div class="proof-icon"><img class="icon-img" src="assets/icons/hash.png" alt="" decoding="async" /></div>
+      <div class="proof-icon"><img class="icon-img" src="/assets/icons/hash.png" alt="" decoding="async" /></div>
       <h2>Report Keyprint</h2>
       <p>The public fingerprint proves the canonical report has not changed while keeping the report contents private.</p>
     </article>
     <article class="proof-card">
-      <div class="proof-icon"><img class="icon-img" src="assets/icons/proof.png" alt="" decoding="async" /></div>
+      <div class="proof-icon"><img class="icon-img" src="/assets/icons/proof.png" alt="" decoding="async" /></div>
       <h2>Proof bundle</h2>
       <p>The public bundle shows platform signature status, time anchors, evidence root, event-chain status, and privacy guarantees.</p>
     </article>
@@ -1117,7 +1121,7 @@
   </footer>
 </div>
 
-<script src="purify.min.js"></script>
+<script src="/purify.min.js"></script>
 <script>
   var API_BASE = "https://api.mykeyz.io";
   var page = document.getElementById("page");
@@ -1127,7 +1131,7 @@
 
   function iconImg(name) {
     name = String(name || "").replace(/[^a-z0-9-]/gi, "");
-    return '<img class="icon-img" src="assets/icons/' + name + '.png" alt="" decoding="async" />';
+    return '<img class="icon-img" src="/assets/icons/' + name + '.png" alt="" decoding="async" />';
   }
   function fmtDateTime(iso) {
     if (!iso) return "-";
@@ -1263,16 +1267,26 @@
     if (!sig) return chip("none", "Issuer unsigned", false);
     return sig.issuerVerified ? chip("ok", "Issuer verified", true) : sig.issuerSigned ? chip("pending", "Signature present", false) : chip("none", "Issuer unsigned", false);
   }
-  function publicKeyValue(sig) {
-    if (!sig || (!sig.issuerPublicKey && !sig.publicKeyId)) return chip("none", "Not published", false);
-    return '<span class="hash">' + esc(publicKeyId(sig)) + '</span>';
+  function publicKeyMaterial(sig) {
+    if (!sig || !sig.issuerPublicKey) return "";
+    return String(sig.issuerPublicKey)
+      .replace(/-----BEGIN PUBLIC KEY-----/g, "")
+      .replace(/-----END PUBLIC KEY-----/g, "")
+      .replace(/[^A-Za-z0-9+/=]/g, "");
   }
   function publicKeyId(sig) {
     if (!sig) return null;
     if (sig.publicKeyId) return sig.publicKeyId;
-    if (!sig.issuerPublicKey) return null;
-    var compact = String(sig.issuerPublicKey).replace(/\s+/g, "");
-    return "mykeyz-platform-key-" + compact.slice(-10);
+    var compact = publicKeyMaterial(sig);
+    if (!compact) return null;
+    return "MYKEYZ-ED25519-" + compact.slice(0, 6) + "..." + compact.slice(-6).replace(/=+$/, "");
+  }
+  function signatureMeta(sig) {
+    var parts = ["Algorithm: Ed25519"];
+    if (sig && sig.signedAt) parts.push("Signed: " + fmtDateTime(sig.signedAt));
+    var keyId = publicKeyId(sig);
+    if (keyId) parts.push("Key ID: " + keyId);
+    return parts.join(" | ");
   }
   function signatureStatus(sig) {
     if (sig && sig.issuerVerified) return "valid";
@@ -1312,7 +1326,6 @@
       levelPill("Signed", signed ? "on" : "") +
       levelPill("Time-Sealed", timeSealed ? "on" : "") +
       levelPill("Evidence-Sealed", evidenceSealed ? "on" : "") +
-      levelPill("Device-Sealed", "future") +
     '</div>';
   }
   function proofBundle(d) {
@@ -1405,16 +1418,13 @@
       '<div class="proof-grid">' +
         fieldRow("document", "Verification ID", '<span class="hash">' + esc(shortValue(d.reportId)) + '</span>', "Public proof identifier only. Not searchable by person or property.", false) +
         fieldRow("hash", "Report Keyprint", hashHtml(d.contentHash), "SHA-256 hash of the canonical report.", true) +
-        fieldRow("signature", "Platform signature", issuerValue(d.signature), d.signature && d.signature.signedAt ? "Algorithm: Ed25519 | signedAt: " + fmtDateTime(d.signature.signedAt) : "Algorithm: Ed25519", false) +
-        fieldRow("signature", "Signing key", publicKeyValue(d.signature), "MyKeyz platform key ID. No user identity is shown.", false) +
+        fieldRow("signature", "Platform signature", issuerValue(d.signature), signatureMeta(d.signature), false) +
         fieldRow("time", "TimeSeal", anchorChip(d.anchor && d.anchor.status) + " " + tsaChip(d.timestampAuthority), [timeSealMeta(d), anchorMeta, tsaMeta].filter(Boolean).join(" | ") || "Independent timing metadata is not published for this record.", true) +
         fieldRow("root", "Evidence root", evidenceLabel(d.evidenceRoot), d.evidenceRoot ? "Merkle root of the evidence set. Individual inclusion can be proven without exposing the full report." : "Evidence root not published for this record.", true) +
         fieldRow("custody", "Event chain", custodyValue(d.custody), custodyMeta(d.custody) || (custodyOk ? "Chain integrity has no public warning." : "Event chain did not reconcile."), false) +
-        fieldRow("seal", "Verification level", verificationLevels(d), "Signed / Time-Sealed / Evidence-Sealed are live when their public proof is present. Device-Sealed is reserved for native-device proof.", true) +
+        fieldRow("seal", "Verification level", verificationLevels(d), "Only levels supported by the public proof are shown.", true) +
         fieldRow("capture", "Evidence commitment", captureLabel(d.captureIntegrity), captureMeta(d.captureIntegrity) || "Counts only. No exact GPS, images, notes, or device identifiers are shown.", true) +
         fieldRow("seal", "Privacy protection", chip("ok", "Personal data hidden", true) + " " + chip("ok", "Photos hidden", true) + " " + chip("ok", "Address hidden", true) + " " + chip("ok", "Notes hidden", true), "Verify the proof, not the people.", true) +
-        fieldRow("document", "Proof package", chip("ok", "Machine-readable", true), "Canonical proof metadata only: Keyprint, signature status, time anchors, evidence root, event-chain status, and privacy flags.", true) +
-        fieldRow("seal", "Seal strength", strengthChip(d.sealStrength), signalMeta, false) +
       '</div>' +
       '<div class="action-row">' +
         (verifyUrl ? '<button type="button" class="copy-button">' + iconImg("copy") + '<span>Copy verification URL</span></button>' : '') +
