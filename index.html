@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TimeSeal by mykeyz.io</title>
+<meta name="description" content="A verified timestamp layer for rental property records." />
+<meta name="robots" content="noindex, nofollow, noarchive" />
+<meta name="theme-color" content="#F8FAFC" />
+<link rel="preconnect" href="https://api.mykeyz.io" crossorigin />
+<link rel="preload" as="image" href="assets/time-seal-hero.jpg" />
+<link rel="preload" as="image" href="assets/time-seal-macro.jpg" />
+<style>
+  :root {
+    --navy: #071B33;
+    --blue: #2563EB;
+    --cyan: #38BDF8;
+    --paper: #F8FAFC;
+    --gray: #64748B;
+    --gray-2: #94A3B8;
+    --line: #D9E3F0;
+    --line-2: #E8EEF6;
+    --white: #FFFFFF;
+    --bad: #B42318;
+    --bad-bg: #FFF4F2;
+    --warn: #B45309;
+    --warn-bg: #FFF7ED;
+    --ok: #1B7F55;
+    --ok-bg: #ECFDF5;
+    --blue-soft: #EFF6FF;
+    --cyan-soft: #E7F8FF;
+    --shadow: 0 22px 70px rgba(7, 27, 51, 0.12);
+    --soft-shadow: 0 14px 36px rgba(7, 27, 51, 0.08);
+    --sans: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { min-height: 100%; background: var(--paper); }
+  body {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    overflow-x: clip;
+    color: var(--navy);
+    font-family: var(--sans);
+    line-height: 1.5;
+    background:
+      linear-gradient(180deg, rgba(248, 250, 252, 0.92), rgba(248, 250, 252, 0.98)),
+      url("assets/time-seal-paper.jpg") center top / cover no-repeat fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  button, input { font: inherit; }
+  a { color: inherit; }
+
+  .page {
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: clip;
+    isolation: isolate;
+  }
+  .page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(rgba(37, 99, 235, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 99, 235, 0.045) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: linear-gradient(180deg, black 0%, transparent 76%);
+  }
+  .topbar {
+    position: relative;
+    z-index: 5;
+    padding: 22px 54px 0;
+  }
+  .topbar-inner {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .brand-mark {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, #FFFFFF 0 38%, #EEF7FF 39% 100%);
+    border: 1px solid #BFD7FF;
+    box-shadow: inset 0 0 0 6px rgba(37, 99, 235, 0.07), 0 10px 24px rgba(7, 27, 51, 0.09);
+  }
+  .brand-mark svg {
+    width: 35px;
+    height: 35px;
+  }
+  .brand-copy {
+    display: grid;
+    gap: 1px;
+  }
+  .brand-copy strong {
+    color: var(--navy);
+    font-size: 18px;
+    line-height: 1;
+    font-weight: 850;
+  }
+  .brand-copy span {
+    color: var(--gray);
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 680;
+  }
+  .top-note {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 13px;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    border-radius: 999px;
+    color: var(--gray);
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .hero {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 72px 0 42px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(380px, 0.78fr);
+    gap: 70px;
+    align-items: center;
+  }
+  .hero > * { min-width: 0; }
+  .page.has-result .hero {
+    grid-template-columns: minmax(310px, 0.5fr) minmax(620px, 1fr);
+    align-items: start;
+  }
+  .page.has-result .hero-copy {
+    max-width: 390px;
+  }
+  .page.has-result h1 {
+    max-width: 380px;
+    font-size: 58px;
+    line-height: 0.98;
+  }
+  .page.has-result .hero-copy > p {
+    max-width: 370px;
+  }
+  .page.has-result .seal-form {
+    width: min(100%, 370px);
+  }
+  .hero-copy { max-width: 650px; min-width: 0; }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 840;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+  .kicker::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 99px;
+    background: var(--cyan);
+    box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.14);
+  }
+  h1 {
+    margin: 0;
+    max-width: 660px;
+    color: var(--navy);
+    font-size: 78px;
+    line-height: 0.94;
+    letter-spacing: 0;
+  }
+  .hero-copy > p {
+    max-width: 560px;
+    margin: 22px 0 30px;
+    color: var(--gray);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .seal-form {
+    width: min(100%, 660px);
+    padding: 12px;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px) saturate(1.04);
+  }
+  .field-label {
+    display: block;
+    margin: 5px 9px 9px;
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: 760;
+  }
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .token-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 auto;
+    border-radius: 15px;
+    color: var(--blue);
+    background: #EEF6FF;
+    border: 1px solid #D9E9FF;
+  }
+  .token-icon svg { width: 20px; height: 20px; }
+  .seal-form input {
+    min-width: 0;
+    flex: 1;
+    height: 54px;
+    border: 0;
+    outline: 0;
+    padding: 0 4px;
+    color: var(--navy);
+    background: transparent;
+    font-family: var(--mono);
+    font-size: 15px;
+  }
+  .seal-form input::placeholder {
+    color: #8AA0B9;
+    font-family: var(--sans);
+  }
+  .seal-form button {
+    height: 54px;
+    min-width: 130px;
+    border: 0;
+    border-radius: 17px;
+    color: var(--white);
+    background: var(--blue);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 820;
+    box-shadow: 0 16px 34px rgba(37, 99, 235, 0.22);
+    transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  }
+  .seal-form button:hover { background: #1D4ED8; box-shadow: 0 18px 38px rgba(37, 99, 235, 0.28); }
+  .seal-form button:active { transform: translateY(1px) scale(0.99); }
+  .form-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 11px 8px 4px;
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: 640;
+  }
+  .form-hint svg { width: 15px; height: 15px; color: var(--cyan); }
+
+  .trust-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 18px;
+  }
+  .trust-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    color: var(--navy);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(37, 99, 235, 0.13);
+    font-size: 12px;
+    font-weight: 760;
+  }
+  .trust-pill svg { width: 14px; height: 14px; color: var(--blue); }
+
+  .visual-zone { display: grid; gap: 18px; min-width: 0; }
+  .hero-card,
+  .result-card {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 24px;
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: var(--shadow);
+  }
+  .hero-card {
+    position: relative;
+    min-height: 500px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.96)),
+      url("assets/time-seal-hero.jpg") center / cover no-repeat;
+  }
+  .atlas-image {
+    position: absolute;
+    inset: 0;
+  }
+  .atlas-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% center;
+  }
+  .hero-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.98) 0 42%, rgba(255, 255, 255, 0.62) 70%, rgba(248, 250, 252, 0.1)),
+      linear-gradient(180deg, rgba(248, 250, 252, 0), rgba(248, 250, 252, 0.9));
+  }
+  .atlas-panel {
+    position: absolute;
+    z-index: 1;
+    left: 22px;
+    top: 22px;
+    width: min(360px, calc(100% - 44px));
+    padding: 20px;
+    border: 1px solid rgba(37, 99, 235, 0.13);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.84);
+    box-shadow: 0 18px 42px rgba(7, 27, 51, 0.09);
+    backdrop-filter: blur(16px);
+  }
+  .atlas-panel h2 {
+    margin: 0;
+    color: var(--navy);
+    font-size: 22px;
+    line-height: 1.1;
+  }
+  .atlas-panel p {
+    margin: 7px 0 16px;
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .atlas-row {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    min-height: 52px;
+    padding: 9px 10px;
+    border: 1px solid var(--line-2);
+    border-radius: 14px;
+    background: rgba(248, 250, 252, 0.9);
+  }
+  .atlas-row + .atlas-row { margin-top: 8px; }
+  .atlas-row svg {
+    width: 32px;
+    height: 32px;
+    color: var(--blue);
+  }
+  .atlas-row b {
+    display: block;
+    color: var(--navy);
+    font-size: 13px;
+    line-height: 1.15;
+  }
+  .atlas-row span {
+    display: block;
+    color: var(--gray);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  .atlas-status {
+    color: var(--ok);
+    font-size: 11px;
+    font-weight: 820;
+  }
+  .visual-caption {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 18px;
+    z-index: 1;
+  }
+  .visual-caption strong {
+    display: block;
+    color: var(--navy);
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  .visual-caption span {
+    display: block;
+    margin-top: 5px;
+    color: var(--gray);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .result-card { display: none; }
+  .page.has-result .hero-card { display: none; }
+  .result-card.show {
+    display: block;
+    width: 100%;
+    animation: lift 340ms cubic-bezier(.16, 1, .3, 1) both;
+  }
+  @keyframes lift {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+  .accent {
+    height: 7px;
+    background: linear-gradient(90deg, var(--navy), var(--blue), var(--cyan));
+  }
+  .head {
+    min-width: 0;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .head > div:last-child { min-width: 0; }
+  .head.ok { background: linear-gradient(180deg, #F3F8FF, rgba(255,255,255,0.96)); }
+  .head.bad { background: var(--bad-bg); }
+  .head.warn { background: var(--warn-bg); }
+  .head .badge {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 auto;
+  }
+  .head .eyebrow {
+    display: inline-flex;
+    margin-bottom: 5px;
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 860;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+  .head .t {
+    color: var(--navy);
+    font-size: 21px;
+    line-height: 1.12;
+    letter-spacing: 0;
+    font-weight: 850;
+    overflow-wrap: anywhere;
+  }
+  .head.bad .t { color: var(--bad); }
+  .head.warn .t { color: var(--warn); }
+  .head .s {
+    margin-top: 5px;
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 1.42;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .receipt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .metric {
+    min-width: 0;
+    padding: 16px 19px;
+    background: var(--white);
+  }
+  .metric .k {
+    color: var(--gray-2);
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .metric .v {
+    margin-top: 4px;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 780;
+    word-break: break-word;
+  }
+  .metric.wide { grid-column: 1 / -1; }
+  .hash {
+    display: inline-block;
+    max-width: 100%;
+    padding: 6px 9px;
+    border-radius: 10px;
+    color: var(--navy);
+    background: #F4F8FD;
+    border: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    max-width: 100%;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 820;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .chip.ok { color: var(--blue); background: #EFF6FF; border: 1px solid #BFDBFE; }
+  .chip.pending { color: var(--warn); background: var(--warn-bg); border: 1px solid #F4D58A; }
+  .chip.bad { color: var(--bad); background: var(--bad-bg); border: 1px solid #F5C2BA; }
+  .chip.none { color: var(--gray); background: #F6F8FB; border: 1px solid var(--line); }
+  .chip svg { width: 13px; height: 13px; }
+
+  .level-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 9px;
+  }
+  .level-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: #F7FAFD;
+    color: var(--gray);
+    font-size: 11px;
+    font-weight: 820;
+  }
+  .level-pill.on {
+    color: var(--blue);
+    border-color: #BFDBFE;
+    background: #EFF6FF;
+  }
+  .level-pill.future {
+    color: var(--gray);
+    border-style: dashed;
+    background: #FFFFFF;
+  }
+
+  .summary-strip {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .summary-stat {
+    min-width: 0;
+    padding: 18px;
+    background: var(--white);
+  }
+  .summary-stat b {
+    display: block;
+    max-width: 100%;
+    color: var(--navy);
+    font-size: 22px;
+    line-height: 1.1;
+    font-weight: 860;
+    overflow-wrap: anywhere;
+  }
+  .summary-stat span {
+    display: block;
+    margin-top: 5px;
+    color: var(--gray);
+    font-size: 11px;
+    font-weight: 780;
+  }
+
+  .proof-grid {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 18px;
+    background:
+      linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.98)),
+      url("assets/time-seal-paper.jpg") center / cover no-repeat;
+  }
+  .proof-row {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 11px;
+    min-height: 78px;
+    padding: 13px;
+    border: 1px solid var(--line-2);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 8px 18px rgba(7, 27, 51, 0.04);
+  }
+  .proof-row > div { min-width: 0; }
+  .proof-row.wide { grid-column: 1 / -1; }
+  .field-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+    color: var(--blue);
+    background: var(--blue-soft);
+    border: 1px solid #D7E8FF;
+  }
+  .field-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+  .proof-row .label {
+    color: var(--gray-2);
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 820;
+  }
+  .proof-row .value {
+    margin-top: 4px;
+    color: var(--navy);
+    font-size: 13px;
+    line-height: 1.35;
+    font-weight: 780;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .proof-row .meta {
+    display: block;
+    margin-top: 4px;
+    color: var(--gray);
+    font-size: 11px;
+    font-weight: 650;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    align-items: center;
+    padding: 16px 18px 18px;
+    border-top: 1px solid var(--line-2);
+    background: var(--white);
+  }
+  .copy-button,
+  .bundle-button,
+  .ghost-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 13px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 830;
+    cursor: pointer;
+  }
+  .copy-button {
+    color: var(--white);
+    background: var(--blue);
+    border: 1px solid var(--blue);
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.2);
+  }
+  .ghost-link {
+    color: var(--blue);
+    background: var(--blue-soft);
+    border: 1px solid #CFE0FF;
+  }
+  .bundle-button {
+    color: var(--navy);
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+  }
+  .copy-button svg,
+  .bundle-button svg,
+  .ghost-link svg {
+    width: 15px;
+    height: 15px;
+  }
+  .mini-note {
+    flex: 1 1 220px;
+    color: var(--gray);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .proof {
+    display: grid;
+    gap: 12px;
+    padding: 20px 22px 22px;
+    background:
+      linear-gradient(180deg, rgba(248, 250, 252, 0.94), rgba(255, 255, 255, 0.98)),
+      url("assets/time-seal-paper.jpg") center / cover no-repeat;
+  }
+  .proof h3 {
+    margin: 0 0 3px;
+    color: var(--navy);
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 860;
+  }
+  .proof .line {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 11px;
+    align-items: start;
+    color: var(--gray);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .proof .tick {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    color: var(--white);
+    background: var(--blue);
+  }
+  .proof .tick svg { width: 13px; height: 13px; }
+  .proof b {
+    display: block;
+    color: var(--navy);
+    font-weight: 820;
+  }
+  .vfoot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 20px;
+    color: var(--gray);
+    background: var(--white);
+    font-size: 12px;
+    font-weight: 660;
+  }
+  .vfoot svg { width: 14px; height: 14px; color: var(--cyan); }
+  .note {
+    padding: 18px 24px 24px;
+    color: var(--gray);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--line);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 760ms linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .proof-band {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 18px 0 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .proof-card {
+    min-height: 176px;
+    padding: 23px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    box-shadow: var(--soft-shadow);
+    backdrop-filter: blur(12px);
+  }
+  .proof-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    margin-bottom: 18px;
+    border-radius: 15px;
+    color: var(--blue);
+    background: #EFF6FF;
+    border: 1px solid #D9E9FF;
+  }
+  .proof-icon svg { width: 21px; height: 21px; }
+  .proof-card h2 {
+    margin: 0;
+    color: var(--navy);
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 1.15;
+  }
+  .proof-card p {
+    margin: 8px 0 0;
+    color: var(--gray);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .page.has-result .proof-band { display: none; }
+
+  footer {
+    padding: 24px 20px 34px;
+    color: var(--gray);
+    text-align: center;
+    font-size: 12.5px;
+  }
+  footer a {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 820;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .topbar { padding: 16px 16px 0; }
+    .top-note { display: none; }
+    .brand-mark { width: 42px; height: 42px; }
+    .brand-mark svg { width: 31px; height: 31px; }
+    .brand-copy strong { font-size: 17px; }
+    .brand-copy span { font-size: 11px; }
+    .hero {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 34px 16px 28px;
+    }
+    .hero-copy,
+    .visual-zone,
+    .result-card {
+      width: 100%;
+      max-width: 100%;
+    }
+    .visual-zone,
+    .result-card.show {
+      width: calc(100vw - 32px);
+      max-width: calc(100vw - 32px);
+    }
+    .page.has-result .hero { display: block; }
+    h1 {
+      max-width: 370px;
+      font-size: 52px;
+      line-height: 0.96;
+    }
+    .page.has-result h1 {
+      max-width: 350px;
+      font-size: 44px;
+      line-height: 1;
+    }
+    .hero-copy > p {
+      max-width: 360px;
+      margin: 16px 0 22px;
+      font-size: 15px;
+      line-height: 1.48;
+    }
+    .seal-form { border-radius: 22px; padding: 10px; }
+    .token-row {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 8px;
+    }
+    .token-icon { width: 42px; height: 42px; border-radius: 14px; }
+    .seal-form input { height: 48px; font-size: 14px; }
+    .seal-form button {
+      grid-column: 1 / -1;
+      width: 100%;
+      height: 50px;
+      min-width: 0;
+    }
+    .trust-strip { display: none; }
+    .hero-card { display: none; }
+    .visual-zone { gap: 0; margin-top: 24px; }
+    .result-card {
+      border-radius: 26px;
+      box-shadow: 0 22px 54px rgba(7, 27, 51, 0.16);
+    }
+    .head { padding: 21px 18px; gap: 13px; }
+    .head {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr);
+      align-items: start;
+    }
+    .head .badge { width: 52px; height: 52px; }
+    .head .t { font-size: 19px; }
+    .summary-strip { grid-template-columns: minmax(0, 1fr); }
+    .summary-stat { padding: 15px 16px; }
+    .summary-stat b { font-size: 19px; }
+    .proof-grid { grid-template-columns: minmax(0, 1fr); padding: 14px; }
+    .proof-row.wide { grid-column: auto; }
+    .receipt-grid { grid-template-columns: 1fr; }
+    .metric { padding: 15px 18px; }
+    .proof { padding: 18px; }
+    .vfoot { justify-content: flex-start; padding: 14px 18px; }
+    .proof-band {
+      grid-template-columns: 1fr;
+      width: min(100% - 28px, 640px);
+      padding: 18px 0 34px;
+      gap: 10px;
+    }
+    .proof-card { min-height: 0; }
+  }
+
+  @media (max-width: 420px) {
+    .kicker { margin-bottom: 14px; font-size: 11px; }
+    h1 { font-size: 42px; }
+    .page.has-result h1 {
+      max-width: 340px;
+      font-size: 42px;
+    }
+    .field-label { margin-left: 6px; }
+    .form-hint { align-items: flex-start; line-height: 1.35; }
+    .hash { font-size: 11px; }
+    .summary-strip { grid-template-columns: minmax(0, 1fr); }
+    .summary-stat b { font-size: 18px; }
+    .copy-button,
+    .bundle-button,
+    .ghost-link { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" id="home" href="./" aria-label="TimeSeal by mykeyz.io home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="17.5" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="22" cy="22" r="10.5" stroke="#38BDF8" stroke-width="1.6"/>
+            <path d="M16.8 22.4 20.6 26 28.3 18.4" stroke="#071B33" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 3v5M22 36v5M3 22h5M36 22h5" stroke="#2563EB" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="brand-copy"><strong>TimeSeal</strong><span>by mykeyz.io</span></span>
+      </a>
+      <div class="top-note">Private report. Public proof.</div>
+    </div>
+  </header>
+
+  <main class="hero">
+    <section class="hero-copy" aria-labelledby="hero-title">
+      <span class="kicker">Privacy-preserving verification</span>
+      <h1 id="hero-title">Private report. Public proof.</h1>
+      <p>Verify the authenticity, integrity, and timing of a MyKeyz report without exposing the people, property, photos, notes, or private report contents.</p>
+
+      <form class="seal-form" id="form" autocomplete="off">
+        <label class="field-label" for="token">Verification link or token</label>
+        <div class="token-row">
+          <span class="token-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.5h7l3 3V20.5H7V3.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3.5V7h3M9.5 12.5l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <input id="token" name="token" placeholder="Paste link or token" spellcheck="false" />
+          <button type="submit">Verify seal</button>
+        </div>
+        <div class="form-hint">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M12 5v14M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Zero personal data exposed. Only cryptographic proof is shown.
+        </div>
+      </form>
+
+      <div class="trust-strip" aria-hidden="true">
+        <span class="trust-pill"><svg viewBox="0 0 24 24" fill="none"><path d="M7 4h7l3 3v13H7V4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Keyprint</span>
+        <span class="trust-pill"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M7 9v6M12 7v10M17 10v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>TimeSeal</span>
+        <span class="trust-pill"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>No PII exposed</span>
+      </div>
+    </section>
+
+    <aside class="visual-zone">
+      <section class="hero-card" aria-label="TimeSeal verification visual">
+        <div class="atlas-image">
+          <img src="assets/time-seal-hero.jpg" alt="An official rental record document with a modern timestamp seal" />
+        </div>
+        <div class="atlas-panel">
+          <h2>Proof inspector</h2>
+          <p>Verify the proof, not the people. The report stays private.</p>
+          <div class="atlas-row">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="8" y="5" width="14" height="22" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M12 13h10M12 17h8M12 21h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <div><b>Verification ID</b><span>Non-guessable proof token</span></div>
+            <div class="atlas-status">shown</div>
+          </div>
+          <div class="atlas-row">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M7 16h18M10 10v12M16 7v18M22 11v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.4" opacity=".35"/></svg>
+            <div><b>TimeSeal</b><span>Independent timing proof</span></div>
+            <div class="atlas-status">verified</div>
+          </div>
+          <div class="atlas-row">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M8 8h16v16H8z" stroke="currentColor" stroke-width="1.8"/><path d="M12 12h8M12 16h8M12 20h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <div><b>Keyprint</b><span>Canonical report fingerprint</span></div>
+            <div class="atlas-status">sealed</div>
+          </div>
+        </div>
+        <div class="visual-caption">
+          <strong>Proof without exposure.</strong>
+          <span>Names, addresses, photos, notes, and contact details are not shown here.</span>
+        </div>
+      </section>
+      <section class="result-card" id="card" aria-live="polite"></section>
+    </aside>
+  </main>
+
+  <section class="proof-band" id="explain" aria-label="How TimeSeal works">
+    <article class="proof-card">
+      <div class="proof-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M7 4h7l3 3v13H7V4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.5 13l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2>Verification result</h2>
+      <p>This page verifies authenticity and integrity without revealing people, property, photos, notes, or contact details.</p>
+    </article>
+    <article class="proof-card">
+      <div class="proof-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 8h14M5 12h10M5 16h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 15.5l1.5 1.5 3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2>Report Keyprint</h2>
+      <p>The public fingerprint proves the canonical report has not changed while keeping the report contents private.</p>
+    </article>
+    <article class="proof-card">
+      <div class="proof-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M8 12a2 2 0 1 0 0 .01M16 12a2 2 0 1 0 0 .01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      <h2>Proof bundle</h2>
+      <p>The public bundle shows platform signature status, time anchors, evidence root, event-chain status, and privacy guarantees.</p>
+    </article>
+  </section>
+
+  <footer>
+    TimeSeal by <a href="https://mykeyz.io">mykeyz.io</a><br />
+    Private report. Public proof.
+  </footer>
+</div>
+
+<script src="purify.min.js"></script>
+<script>
+  var API_BASE = "https://api.mykeyz.io";
+  var page = document.getElementById("page");
+  var form = document.getElementById("form");
+  var input = document.getElementById("token");
+  var card = document.getElementById("card");
+
+  function svg(name) {
+    var s = {
+      check: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/><circle cx="28" cy="28" r="13" fill="#2563EB"/><path d="M34 24 26 32l-4-4" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 6v6M28 44v6M6 28h6M44 28h6" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/></svg>',
+      tick: '<svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      cross: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" fill="#FFF4F2" stroke="#B42318" stroke-width="2"/><path d="M22 22l12 12M34 22 22 34" stroke="#B42318" stroke-width="3.2" stroke-linecap="round"/><path d="M28 8v5M28 43v5M8 28h5M43 28h5" stroke="#F5C2BA" stroke-width="2" stroke-linecap="round"/></svg>',
+      warn: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" fill="#FFF7ED" stroke="#B45309" stroke-width="2"/><path d="M28 16v15" stroke="#B45309" stroke-width="3.2" stroke-linecap="round"/><circle cx="28" cy="38" r="2.2" fill="#B45309"/></svg>',
+      ok: '<svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      seal: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7"/><path d="M8.7 12.2 11 14.4l4.4-4.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      document: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 3.5h7l3 3V20.5H7V3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3M9.5 11h5M9.5 14h6M9.5 17h3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+      hash: '<svg viewBox="0 0 24 24" fill="none"><path d="M9 4 7 20M17 4l-2 16M5 9h15M4 15h15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+      signature: '<svg viewBox="0 0 24 24" fill="none"><path d="M4 17c3.5-6 5.4-8 6.5-8 .8 0 1.1 1 .6 2.8L10.3 15c-.3 1.3.8 2 1.9 1.1l1.5-1.2c.9-.7 1.8-.4 2.1.7.3 1 1.2 1.3 2.1.7L21 14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      time: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+      anchor: '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M7 8v8M12 6v12M17 9v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.2" opacity=".38"/></svg>',
+      custody: '<svg viewBox="0 0 24 24" fill="none"><path d="M6 7h12M6 12h12M6 17h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="6" cy="7" r="2" fill="white" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="12" r="2" fill="white" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="17" r="2" fill="white" stroke="currentColor" stroke-width="1.5"/></svg>',
+      capture: '<svg viewBox="0 0 24 24" fill="none"><path d="M5 8.5h3l1.4-2h5.2l1.4 2h3v9.5H5V8.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="13" r="3" stroke="currentColor" stroke-width="1.7"/></svg>',
+      root: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="2.3" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2.3" stroke="currentColor" stroke-width="1.6"/><circle cx="18" cy="18" r="2.3" stroke="currentColor" stroke-width="1.6"/><path d="M11 7 7 16M13 7l4 9M8.5 18h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      copy: '<svg viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="10" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M6 16H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+      open: '<svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M13 11l6-6M19 14v4.5H5.5V5H10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      download: '<svg viewBox="0 0 24 24" fill="none"><path d="M12 4v10M8 10l4 4 4-4M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    };
+    return s[name] || "";
+  }
+  function fmtDateTime(iso) {
+    if (!iso) return "-";
+    try {
+      return new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC"
+      }).format(new Date(iso)) + " UTC";
+    } catch (e) {
+      return iso;
+    }
+  }
+  function shortHash(h) { return !h ? "-" : (h.length > 24 ? h.slice(0, 12) + "..." + h.slice(-8) : h); }
+  function shortValue(v) {
+    v = String(v == null ? "" : v);
+    return v.length > 34 ? v.slice(0, 16) + "..." + v.slice(-10) : (v || "-");
+  }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+  function sanitize(html) { return (window.DOMPurify && DOMPurify.sanitize) ? DOMPurify.sanitize(html) : html; }
+
+  function cleanToken(t) {
+    return String(t || "").trim().replace(/^["'<]+|[)"'>.,;]+$/g, "");
+  }
+  function extractToken(raw) {
+    raw = String(raw || "").trim();
+    if (!raw) return "";
+    var tokenParam = raw.match(/[?&](?:token|qrToken)=([^&#\s]+)/i);
+    if (tokenParam) return cleanToken(decodeURIComponent(tokenParam[1]));
+    var verifyPath = raw.match(/\/verify\/([^/?#\s]+)/i);
+    if (verifyPath) return cleanToken(decodeURIComponent(verifyPath[1]));
+    try {
+      if (/^https?:\/\//i.test(raw)) {
+        var url = new URL(raw);
+        var fromPath = url.pathname.match(/\/verify\/([^/?#]+)/i);
+        if (fromPath) return cleanToken(decodeURIComponent(fromPath[1]));
+        var fromQuery = url.searchParams.get("token") || url.searchParams.get("qrToken");
+        if (fromQuery) return cleanToken(fromQuery);
+      }
+    } catch (e) {}
+    var hexToken = raw.match(/\b[0-9a-f]{48}\b/i);
+    if (hexToken) return cleanToken(hexToken[0]);
+    return cleanToken(raw);
+  }
+  function chip(kind, label, icon) {
+    return '<span class="chip ' + kind + '">' + (icon ? svg("ok") : "") + esc(label) + '</span>';
+  }
+  function hashHtml(value) {
+    return value ? '<span class="hash" title="' + esc(value) + '">' + esc(shortHash(value)) + '</span>' : chip("none", "Not available", false);
+  }
+  function stat(value, label) {
+    return '<div class="summary-stat"><b>' + value + '</b><span>' + esc(label) + '</span></div>';
+  }
+  function fieldRow(icon, label, valueHtml, meta, wide) {
+    return '<div class="proof-row' + (wide ? ' wide' : '') + '">' +
+      '<span class="field-icon" aria-hidden="true">' + svg(icon) + '</span>' +
+      '<div><div class="label">' + esc(label) + '</div><div class="value">' + valueHtml + '</div>' +
+      (meta ? '<span class="meta">' + esc(meta) + '</span>' : '') + '</div></div>';
+  }
+  function anchorChip(status) {
+    if (status === "attested") return chip("ok", "OpenTimestamps attested", true);
+    if (status === "pending") return chip("pending", "OpenTimestamps pending", false);
+    if (status === "failed") return chip("bad", "OpenTimestamps failed", false);
+    return chip("none", "OpenTimestamps not published", false);
+  }
+  function tsaChip(tsa) {
+    var status = tsa && tsa.status;
+    if (status === "attested") return chip("ok", "TSA signed", true);
+    if (status === "failed") return chip("bad", "TSA failed", false);
+    return chip("none", "No TSA receipt", false);
+  }
+  function sigChip(sig) {
+    if (sig && sig.issuerVerified) return chip("ok", "Issuer verified", true);
+    if (sig && sig.issuerSigned) return chip("pending", "Signature present", false);
+    return chip("none", "Issuer unsigned", false);
+  }
+  function strengthChip(strength) {
+    var band = strength && strength.band;
+    if (band === "high") return chip("bad", "High signal", false);
+    if (band === "medium") return chip("pending", "Review signal", false);
+    return chip("ok", "Full strength", true);
+  }
+  function strengthText(strength) {
+    var band = strength && strength.band;
+    if (band === "high") return "High signal";
+    if (band === "medium") return "Review signal";
+    return "Full strength";
+  }
+  function evidenceLabel(root) {
+    return root ? '<span class="hash">' + esc(shortHash(root)) + '</span>' : chip("none", "No evidence root", false);
+  }
+  function captureLabel(capture) {
+    if (!capture || typeof capture.photoCount !== "number") return chip("none", "No capture summary", false);
+    var geo = capture.geoConsistent + "/" + capture.photoCount + " location-consistent";
+    var time = capture.timeSkewed ? capture.timeSkewed + " time skew" : "time clean";
+    return esc(capture.photoCount + " evidence items | " + geo + " | " + time);
+  }
+  function captureMeta(capture) {
+    if (!capture) return "";
+    var first = capture.serverReceivedFirst ? "First received " + fmtDateTime(capture.serverReceivedFirst) : "";
+    var last = capture.serverReceivedLast ? "Last received " + fmtDateTime(capture.serverReceivedLast) : "";
+    return [first, last].filter(Boolean).join(" | ");
+  }
+  function sealHistoryLabel(seal) {
+    if (!seal || typeof seal.versionCount !== "number" || seal.versionCount < 1) return chip("none", "No seal history", false);
+    if (seal.versionCount === 1) return chip("ok", "Sealed once", true);
+    return chip("pending", "Re-sealed " + seal.versionCount + " times", false);
+  }
+  function sealMeta(seal) {
+    if (!seal) return "";
+    var first = seal.firstSealedAt ? "First sealed " + fmtDateTime(seal.firstSealedAt) : "";
+    var last = seal.lastSealedAt && seal.lastSealedAt !== seal.firstSealedAt ? "Last sealed " + fmtDateTime(seal.lastSealedAt) : "";
+    return [first, last].filter(Boolean).join(" | ");
+  }
+  function custodyValue(custody) {
+    if (!custody) return chip("none", "Legacy record", false);
+    var label = custody.valid ? "Valid chain" : "Warning";
+    var count = typeof custody.eventCount === "number" ? " | " + custody.eventCount + " events" : "";
+    return (custody.valid ? chip("ok", label, true) : chip("bad", label, false)) + esc(count);
+  }
+  function custodyMeta(custody) {
+    if (!custody || typeof custody.sealedEventCount !== "number") return "";
+    return "Sealed event count: " + custody.sealedEventCount;
+  }
+  function issuerValue(sig) {
+    if (!sig) return chip("none", "Issuer unsigned", false);
+    return sig.issuerVerified ? chip("ok", "Issuer verified", true) : sig.issuerSigned ? chip("pending", "Signature present", false) : chip("none", "Issuer unsigned", false);
+  }
+  function publicKeyValue(sig) {
+    if (!sig || (!sig.issuerPublicKey && !sig.publicKeyId)) return chip("none", "Not published", false);
+    return '<span class="hash">' + esc(publicKeyId(sig)) + '</span>';
+  }
+  function publicKeyId(sig) {
+    if (!sig) return null;
+    if (sig.publicKeyId) return sig.publicKeyId;
+    if (!sig.issuerPublicKey) return null;
+    var compact = String(sig.issuerPublicKey).replace(/\s+/g, "");
+    return "mykeyz-platform-key-" + compact.slice(-10);
+  }
+  function signatureStatus(sig) {
+    if (sig && sig.issuerVerified) return "valid";
+    if (sig && sig.issuerSigned) return "present";
+    return "missing";
+  }
+  function safeVerificationUrl(d) {
+    var value = String((d && d.verificationUrl) || "");
+    try {
+      var url = new URL(value);
+      var allowedHost = url.hostname === "api.mykeyz.io" || url.hostname === "mykeyz.net" || url.hostname.endsWith(".mykeyz.io");
+      return url.protocol === "https:" && allowedHost && /^\/verify\/[^/?#\s]+/i.test(url.pathname) ? value : "";
+    } catch (e) {
+      return "";
+    }
+  }
+  function timeSealMeta(d) {
+    var startBeacon = "";
+    var drand = d && d.timeSeal && d.timeSeal.drand ? d.timeSeal.drand : (d && d.drand ? d.drand : null);
+    if (drand && drand.round) startBeacon = "drand round: " + drand.round;
+    return [
+      startBeacon,
+      d.anchor && d.anchor.status ? "OpenTimestamps: " + d.anchor.status : "",
+      d.timestampAuthority && d.timestampAuthority.status ? "RFC 3161 TSA: " + d.timestampAuthority.status : ""
+    ].filter(Boolean).join(" | ");
+  }
+  function showResult() { page.classList.add("has-result"); }
+  function levelPill(label, state) {
+    return '<span class="level-pill ' + (state || "") + '">' + esc(label) + '</span>';
+  }
+  function verificationLevels(d) {
+    var signed = d.signature && d.signature.issuerVerified;
+    var timeSealed = (d.anchor && (d.anchor.status === "attested" || d.anchor.status === "pending")) ||
+      (d.timestampAuthority && d.timestampAuthority.status === "attested");
+    var evidenceSealed = Boolean(d.evidenceRoot);
+    return '<div class="level-list">' +
+      levelPill("Signed", signed ? "on" : "") +
+      levelPill("Time-Sealed", timeSealed ? "on" : "") +
+      levelPill("Evidence-Sealed", evidenceSealed ? "on" : "") +
+      levelPill("Device-Sealed", "future") +
+    '</div>';
+  }
+  function proofBundle(d) {
+    return {
+      status: d.status || "verified",
+      verificationId: d.reportId || null,
+      keyprint: d.contentHash || null,
+      canonicalVersion: d.canonicalVersion || "mykeyz-canonical-v1",
+      signature: {
+        algorithm: "Ed25519",
+        status: signatureStatus(d.signature),
+        publicKeyId: publicKeyId(d.signature)
+      },
+      timeSeal: {
+        startBeacon: {
+          source: d.timeSeal && d.timeSeal.drand ? "drand" : null,
+          round: d.timeSeal && d.timeSeal.drand ? d.timeSeal.drand.round : null,
+          status: d.timeSeal && d.timeSeal.drand ? (d.timeSeal.drand.status || "valid") : "not_published"
+        },
+        openTimestamps: {
+          status: d.anchor ? d.anchor.status : "not_published"
+        },
+        rfc3161: {
+          status: d.timestampAuthority ? d.timestampAuthority.status : "not_published",
+          authority: d.timestampAuthority ? d.timestampAuthority.authority : null
+        }
+      },
+      evidence: {
+        merkleRoot: d.evidenceRoot || null,
+        itemCount: d.captureIntegrity && typeof d.captureIntegrity.photoCount === "number" ? d.captureIntegrity.photoCount : null,
+        chainStatus: d.custody ? (d.custody.valid ? "valid" : "invalid") : "not_published"
+      },
+      privacy: {
+        personalDataExposed: false,
+        photosExposed: false,
+        addressExposed: false,
+        notesExposed: false,
+        contactDetailsExposed: false
+      },
+      verificationUrl: safeVerificationUrl(d) || null
+    };
+  }
+  function downloadProofBundle(d) {
+    var bundle = proofBundle(d);
+    var blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
+    var link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "timeseal-proof-bundle.json";
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(function () {
+      URL.revokeObjectURL(link.href);
+      link.remove();
+    }, 0);
+  }
+
+  function renderVerified(d) {
+    showResult();
+    card.className = "result-card show ok-card";
+    var sigOk = d.signature && d.signature.issuerVerified;
+    var custodyOk = !d.custody || d.custody.valid;
+    var verifyUrl = safeVerificationUrl(d);
+    var anchorMeta = [
+      d.anchor && d.anchor.submittedAt ? "submittedAt: " + fmtDateTime(d.anchor.submittedAt) : "",
+      d.anchor && d.anchor.attestedAt ? "attestedAt: " + fmtDateTime(d.anchor.attestedAt) : ""
+    ].filter(Boolean).join(" | ");
+    var tsaMeta = [
+      d.timestampAuthority && d.timestampAuthority.authority ? "authority: " + d.timestampAuthority.authority : "",
+      d.timestampAuthority && d.timestampAuthority.signedAt ? "signedAt: " + fmtDateTime(d.timestampAuthority.signedAt) : ""
+    ].filter(Boolean).join(" | ");
+    var signalMeta = d.sealStrength && d.sealStrength.signals && d.sealStrength.signals.length
+      ? "Signals: " + d.sealStrength.signals.join(", ")
+      : "No notable advisory signals";
+    var title = sigOk ? "Authentic report proof" : "Public proof record found";
+    var subtitle = sigOk
+      ? "Private report. Public proof. The platform signature validates this report Keyprint."
+      : "The public proof exists, but the platform signature is not independently verified.";
+    card.innerHTML = sanitize(
+      '<div class="accent"></div>' +
+      '<div class="head ok"><div class="badge">' + svg("check") + '</div>' +
+        '<div><div class="eyebrow">Privacy-preserving verification</div>' +
+        '<div class="t">' + esc(title) + '</div>' +
+        '<div class="s">' + esc(subtitle) + '</div></div></div>' +
+      '<div class="summary-strip">' +
+        stat(chip("ok", "Verified", true), "Verification status") +
+        stat(sigChip(d.signature), "Platform signature") +
+        stat(anchorChip(d.anchor && d.anchor.status), "TimeSeal") +
+        stat(evidenceLabel(d.evidenceRoot), "Evidence root") +
+      '</div>' +
+      '<div class="proof-grid">' +
+        fieldRow("document", "Verification ID", '<span class="hash">' + esc(shortValue(d.reportId)) + '</span>', "Public proof identifier only. Not searchable by person or property.", false) +
+        fieldRow("hash", "Report Keyprint", hashHtml(d.contentHash), "SHA-256 hash of the canonical report.", true) +
+        fieldRow("signature", "Platform signature", issuerValue(d.signature), d.signature && d.signature.signedAt ? "Algorithm: Ed25519 | signedAt: " + fmtDateTime(d.signature.signedAt) : "Algorithm: Ed25519", false) +
+        fieldRow("signature", "Signing key", publicKeyValue(d.signature), "MyKeyz platform key ID. No user identity is shown.", false) +
+        fieldRow("time", "TimeSeal", anchorChip(d.anchor && d.anchor.status) + " " + tsaChip(d.timestampAuthority), [timeSealMeta(d), anchorMeta, tsaMeta].filter(Boolean).join(" | ") || "Independent timing metadata is not published for this record.", true) +
+        fieldRow("root", "Evidence root", evidenceLabel(d.evidenceRoot), d.evidenceRoot ? "Merkle root of the evidence set. Individual inclusion can be proven without exposing the full report." : "Evidence root not published for this record.", true) +
+        fieldRow("custody", "Event chain", custodyValue(d.custody), custodyMeta(d.custody) || (custodyOk ? "Chain integrity has no public warning." : "Event chain did not reconcile."), false) +
+        fieldRow("seal", "Verification level", verificationLevels(d), "Signed / Time-Sealed / Evidence-Sealed are live when their public proof is present. Device-Sealed is reserved for native-device proof.", true) +
+        fieldRow("capture", "Evidence commitment", captureLabel(d.captureIntegrity), captureMeta(d.captureIntegrity) || "Counts only. No exact GPS, images, notes, or device identifiers are shown.", true) +
+        fieldRow("seal", "Privacy protection", chip("ok", "Personal data hidden", true) + " " + chip("ok", "Photos hidden", true) + " " + chip("ok", "Address hidden", true) + " " + chip("ok", "Notes hidden", true), "Verify the proof, not the people.", true) +
+        fieldRow("document", "Proof package", chip("ok", "Machine-readable", true), "Canonical proof metadata only: Keyprint, signature status, time anchors, evidence root, event-chain status, and privacy flags.", true) +
+        fieldRow("seal", "Seal strength", strengthChip(d.sealStrength), signalMeta, false) +
+      '</div>' +
+      '<div class="action-row">' +
+        (verifyUrl ? '<button type="button" class="copy-button">' + svg("copy") + '<span>Copy verification URL</span></button>' : '') +
+        '<button type="button" class="bundle-button">' + svg("download") + '<span>Download proof data</span></button>' +
+        (verifyUrl ? '<a class="ghost-link" href="' + esc(verifyUrl) + '" target="_blank" rel="noopener noreferrer">' + svg("open") + '<span>Open public record</span></a>' : '') +
+        '<div class="mini-note">This page verifies authenticity, integrity, and timing without exposing names, addresses, contact details, exact GPS, photos, notes, payment data, or private report contents.</div>' +
+      '</div>' +
+      '<div class="vfoot">' + svg("seal") +
+        '<span>Private report. Public proof.</span><span>|</span><span>GET /verify/:qrToken?format=json</span><span>|</span><span>Verified by MyKeyz</span>' +
+      '</div>');
+    var copyButton = card.querySelector(".copy-button");
+    if (copyButton && verifyUrl) {
+      copyButton.addEventListener("click", async function () {
+        try {
+          await navigator.clipboard.writeText(verifyUrl);
+          copyButton.querySelector("span").textContent = "Copied";
+          setTimeout(function () {
+            if (copyButton.querySelector("span")) copyButton.querySelector("span").textContent = "Copy verification URL";
+          }, 1600);
+        } catch (e) {
+          input.value = verifyUrl;
+          input.select();
+        }
+      });
+    }
+    var bundleButton = card.querySelector(".bundle-button");
+    if (bundleButton) {
+      bundleButton.addEventListener("click", function () {
+        downloadProofBundle(d);
+      });
+    }
+  }
+
+  function renderState(kind, title, sub, note) {
+    showResult();
+    card.className = "result-card show";
+    card.innerHTML = sanitize(
+      '<div class="head ' + (kind === "revoked" ? "warn" : "bad") + '"><div class="badge">' + svg(kind === "revoked" ? "warn" : "cross") + '</div>' +
+        '<div><div class="t">' + esc(title) + '</div><div class="s">' + esc(sub) + '</div></div></div>' +
+      (note ? '<div class="note">' + esc(note) + '</div>' : "")
+    );
+  }
+
+  function loading() {
+    showResult();
+    card.className = "result-card show";
+    card.innerHTML = '<div class="head"><div class="badge"><div class="spinner"></div></div><div><div class="t">Checking TimeSeal...</div><div class="s">Looking up the public verification record.</div></div></div>';
+  }
+
+  async function verify(token) {
+    token = extractToken(token);
+    if (!token) { input.focus(); return; }
+    input.value = token;
+    loading();
+    var url = new URL(window.location.href);
+    url.searchParams.set("token", token);
+    window.history.replaceState({}, "", url);
+    try {
+      var res = await fetch(API_BASE + "/verify/" + encodeURIComponent(token) + "?format=json", { headers: { Accept: "application/json" } });
+      if (res.status === 404) { renderState("notfound", "Seal not found", "This token does not match a TimeSeal record.", "Double-check the QR code or PDF footer. If someone presented this as verified, treat it with caution."); return; }
+      if (res.status === 403) { renderState("revoked", "Seal withdrawn", "This record is no longer valid.", "It may have been refunded, replaced, or superseded. Any printed copy no longer represents a live verification record."); return; }
+      if (!res.ok) { renderState("notfound", "Could not confirm the seal", "The verification service did not return a result.", "Please try again in a moment."); return; }
+      var data = await res.json();
+      if (data.status === "verified") renderVerified(data);
+      else if (data.status === "revoked") renderState("revoked", "Seal withdrawn", "This record is no longer valid.", null);
+      else renderState("notfound", "Seal not found", "This token does not match a TimeSeal record.", null);
+    } catch (e) {
+      renderState("notfound", "Could not reach verification", "We were not able to confirm this seal just now.", "Check your connection and try again in a moment.");
+    }
+  }
+
+  function goHome() {
+    page.classList.remove("has-result");
+    card.className = "result-card";
+    card.innerHTML = "";
+    input.value = "";
+    var url = new URL(window.location.href);
+    url.search = "";
+    window.history.replaceState({}, "", url.pathname);
+    input.focus();
+  }
+
+  form.addEventListener("submit", function (e) { e.preventDefault(); verify(input.value); });
+  document.getElementById("home").addEventListener("click", function (e) { e.preventDefault(); goHome(); });
+
+  (function () {
+    var qs = new URLSearchParams(window.location.search);
+    var demo = qs.get("demo");
+    if (demo === "1" || demo === "verified") {
+      renderVerified({ status: "verified", reportId: "verify_mykeyz_9X7KQ-42MVP-A8D3F", generatedAt: "2026-06-08T10:00:00Z",
+        contentHash: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        signature: { issuerSigned: true, issuerVerified: true, issuerPublicKey: "-----BEGIN PUBLIC KEY----- MCowBQYDK2VwAyEA9f7QdemoIssuerPublicKeyTimeSealV2FieldOnly -----END PUBLIC KEY-----", signedAt: "2026-06-08T10:00:04Z" },
+        timeSeal: { drand: { round: 12345678, status: "valid" } },
+        anchor: { status: "attested", attestedAt: "2026-06-08T12:00:00Z" },
+        timestampAuthority: { status: "attested", signedAt: "2026-06-08T10:00:06Z", authority: "freetsa.org" },
+        evidenceRoot: "f1b9c5d2718ef9d31db8565a93f0ef4c2db9fca799e1a9445d2b8a870c2e8924",
+        custody: { valid: true, eventCount: 18, sealedEventCount: 17 },
+        captureIntegrity: { photoCount: 12, geoConsistent: 12, geoOutliers: 0, timeConfirmed: 9, timeSkewed: 0, nonceVerified: 0, serverReceivedFirst: "2026-06-08T09:34:00Z", serverReceivedLast: "2026-06-08T09:58:00Z" },
+        seal: { versionCount: 1, firstSealedAt: "2026-06-08T10:00:05Z", lastSealedAt: "2026-06-08T10:00:05Z" },
+        sealStrength: { band: "low", signals: [] },
+        verificationUrl: "https://api.mykeyz.io/verify/demo-token" });
+      return;
+    }
+    if (demo === "notfound") { renderState("notfound", "Seal not found", "This token does not match a TimeSeal record.", "Double-check the QR code or PDF footer. If someone presented this as verified, treat it with caution."); return; }
+    if (demo === "revoked") { renderState("revoked", "Seal withdrawn", "This record is no longer valid.", "It may have been refunded, replaced, or superseded. Any printed copy no longer represents a live verification record."); return; }
+    var t = qs.get("token");
+    if (!t) { var m = window.location.pathname.match(/\/verify\/([^/?#]+)/); if (m) t = decodeURIComponent(m[1]); }
+    if (t) { input.value = extractToken(t); verify(t); }
+  })();
+</script>
+</body>
+</html>

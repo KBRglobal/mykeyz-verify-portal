@@ -1,0 +1,9 @@
+{
+  "name": "mykeyz-verify-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p dist/assets && cp index.html _headers _redirects purify.min.js dist/ && cp assets/time-seal-hero.jpg assets/time-seal-macro.jpg assets/time-seal-paper.jpg dist/assets/",
+    "deploy": "wrangler pages deploy dist --project-name=mykeyz-verify --branch=main"
+  }
+}

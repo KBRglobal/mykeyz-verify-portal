@@ -1,0 +1,4 @@
+# CF Pages: QR deep-links of the form mykeyz.net/verify/<token> resolve to the
+# single-page app, which reads the token from the path. 200 = rewrite (no
+# visible redirect), so the URL the user scanned stays intact.
+/verify/*  /index.html  200

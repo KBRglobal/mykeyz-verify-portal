@@ -1,0 +1,11 @@
+# Security headers for the public verification portal (mykeyz.net).
+# The page is self-contained (inline CSS + JS) and only ever talks to the
+# MyKeyz API over HTTPS — the CSP reflects exactly that and nothing more.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://api.mykeyz.io; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
