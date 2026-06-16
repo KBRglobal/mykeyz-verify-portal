@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "mkdir -p dist/assets && cp index.html _headers _redirects purify.min.js dist/ && cp assets/time-seal-hero.jpg assets/time-seal-macro.jpg assets/time-seal-paper.jpg dist/assets/",
+    "build": "node scripts/build-assets.js && mkdir -p dist/assets && cp index.html _headers _redirects purify.min.js dist/ && cp assets/time-seal-hero.jpg assets/time-seal-macro.jpg assets/time-seal-paper.jpg dist/assets/ && cp -R assets/icons assets/fonts dist/assets/",
     "deploy": "wrangler pages deploy dist --project-name=mykeyz-verify --branch=main"
+  },
+  "dependencies": {
+    "@fontsource-variable/instrument-sans": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@phosphor-icons/core": "^2.1.1",
+    "sharp": "^0.35.1"
   }
 }
