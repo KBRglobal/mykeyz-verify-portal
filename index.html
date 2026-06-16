@@ -1297,8 +1297,10 @@
     var value = String((d && d.verificationUrl) || "");
     try {
       var url = new URL(value);
-      var allowedHost = url.hostname === "api.mykeyz.io" || url.hostname === "mykeyz.net" || url.hostname.endsWith(".mykeyz.io");
-      return url.protocol === "https:" && allowedHost && /^\/verify\/[^/?#\s]+/i.test(url.pathname) ? value : "";
+      var allowedHost = url.hostname === "api.mykeyz.io" || url.hostname === "mykeyz.net" || url.hostname.endsWith(".mykeyz.io") || url.hostname.endsWith(".mykeyz.net");
+      var pathToken = /^\/verify\/[^/?#\s]+/i.test(url.pathname);
+      var queryToken = (url.pathname === "/" || url.pathname === "") && Boolean(url.searchParams.get("token") || url.searchParams.get("qrToken"));
+      return url.protocol === "https:" && allowedHost && (pathToken || queryToken) ? value : "";
     } catch (e) {
       return "";
     }
