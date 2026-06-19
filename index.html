@@ -1189,6 +1189,16 @@
   function hashHtml(value) {
     return value ? '<span class="hash" title="' + esc(value) + '">' + esc(shortHash(value)) + '</span>' : chip("none", "Not available", false);
   }
+  function canonicalChip(d) {
+    if (d && d.hashMatches === true) return chip("ok", "Canonical hash matches", true);
+    if (d && d.hashMatches === false) return chip("bad", "Canonical mismatch", false);
+    return chip("none", "Canonical check unavailable", false);
+  }
+  function canonicalMeta(d) {
+    if (d && d.hashMatches === true) return "The public Keyprint matches a fresh server rebuild of the canonical report data.";
+    if (d && d.hashMatches === false) return "The saved Keyprint does not match the current canonical data. Treat this record as modified until MyKeyz support reviews it.";
+    return "Legacy or incomplete proof record. The saved Keyprint is shown, but the public endpoint could not rebuild it.";
+  }
   function stat(value, label) {
     return '<div class="summary-stat"><b>' + value + '</b><span>' + esc(label) + '</span></div>';
   }
@@ -1335,6 +1345,7 @@
       status: d.status || "verified",
       verificationId: d.reportId || null,
       keyprint: d.contentHash || null,
+      hashMatches: d.hashMatches === true,
       canonicalVersion: d.canonicalVersion || "mykeyz-canonical-v1",
       signature: {
         algorithm: "Ed25519",
@@ -1384,7 +1395,16 @@
     }, 0);
   }
 
+  function renderTampered() {
+    renderState("tampered", "Record could not be verified",
+      "This record exists, but its contents no longer match the sealed Keyprint (or the platform signature did not verify).",
+      "Treat this report as modified. Do not rely on it until MyKeyz support reviews it.");
+  }
+
   function renderVerified(d) {
+    // Defense in depth: never present a mismatched or unsigned record as
+    // Authentic, even if the status field happens to say verified (§9).
+    if (d.hashMatches === false || d.status === "tampered") { renderTampered(); return; }
     showResult();
     card.className = "result-card show ok-card";
     var sigOk = d.signature && d.signature.issuerVerified;
@@ -1420,6 +1440,7 @@
       '<div class="proof-grid">' +
         fieldRow("document", "Verification ID", '<span class="hash">' + esc(shortValue(d.reportId)) + '</span>', "Public proof identifier only. Not searchable by person or property.", false) +
         fieldRow("hash", "Report Keyprint", hashHtml(d.contentHash), "SHA-256 hash of the canonical report.", true) +
+        fieldRow("proof", "Canonical check", canonicalChip(d), canonicalMeta(d), true) +
         fieldRow("signature", "Platform signature", issuerValue(d.signature), signatureMeta(d.signature), false) +
         fieldRow("time", "TimeSeal", anchorChip(d.anchor && d.anchor.status) + " " + tsaChip(d.timestampAuthority), [timeSealMeta(d), anchorMeta, tsaMeta].filter(Boolean).join(" | ") || "Independent timing metadata is not published for this record.", true) +
         fieldRow("root", "Evidence root", evidenceLabel(d.evidenceRoot), d.evidenceRoot ? "Merkle root of the evidence set. Individual inclusion can be proven without exposing the full report." : "Evidence root not published for this record.", true) +
@@ -1492,6 +1513,7 @@
       if (!res.ok) { renderState("notfound", "Could not confirm the seal", "The verification service did not return a result.", "Please try again in a moment."); return; }
       var data = await res.json();
       if (data.status === "verified") renderVerified(data);
+      else if (data.status === "tampered") renderTampered();
       else if (data.status === "revoked") renderState("revoked", "Seal withdrawn", "This record is no longer valid.", null);
       else renderState("notfound", "Seal not found", "This token does not match a TimeSeal record.", null);
     } catch (e) {
@@ -1527,6 +1549,8 @@
     if (demo === "1" || demo === "verified") {
       renderVerified({ status: "verified", reportId: "verify_mykeyz_9X7KQ-42MVP-A8D3F", generatedAt: "2026-06-08T10:00:00Z",
         contentHash: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        recomputedHash: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        hashMatches: true,
         signature: { issuerSigned: true, issuerVerified: true, issuerPublicKey: "-----BEGIN PUBLIC KEY----- MCowBQYDK2VwAyEA9f7QdemoIssuerPublicKeyTimeSealV2FieldOnly -----END PUBLIC KEY-----", signedAt: "2026-06-08T10:00:04Z" },
         timeSeal: { drand: { round: 12345678, status: "valid" } },
         anchor: { status: "attested", attestedAt: "2026-06-08T12:00:00Z" },
@@ -1541,6 +1565,15 @@
     }
     if (demo === "notfound") { renderState("notfound", "Seal not found", "This token does not match a TimeSeal record.", "Double-check the QR code or PDF footer. If someone presented this as verified, treat it with caution."); return; }
     if (demo === "revoked") { renderState("revoked", "Seal withdrawn", "This record is no longer valid.", "It may have been refunded, replaced, or superseded. Any printed copy no longer represents a live verification record."); return; }
+    if (demo === "tampered") {
+      // Exercises the real path: a modified report comes back status:"tampered"
+      // with hashMatches:false, and renderVerified's guard routes it to the red
+      // "could not be verified" screen instead of the green Authentic card.
+      renderVerified({ status: "tampered", hashMatches: false, reportId: "verify_mykeyz_9X7KQ-42MVP-A8D3F",
+        contentHash: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        signature: { issuerSigned: true, issuerVerified: false, signedAt: "2026-06-08T10:00:04Z" } });
+      return;
+    }
     var t = qs.get("token");
     if (!t) { var m = window.location.pathname.match(/\/verify\/([^/?#]+)/); if (m) t = decodeURIComponent(m[1]); }
     if (t) { input.value = extractToken(t); resizeTokenField(); verify(t); }
